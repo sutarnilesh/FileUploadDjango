@@ -1,0 +1,87 @@
+
+{% load querystring from django_tables2 %}
+{% load trans blocktrans from i18n %}
+{% load bootstrap3 %}
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+<html>
+<head>
+<title class="title" >
+
+</title>
+    <style>
+        th, td { white-space: nowrap; }
+    div.dataTables_wrapper {
+        margin: 0 auto;
+    }
+
+    div.container {
+        width: 80%;
+    }
+    </style>
+</head>
+
+<body >
+
+<h1> File Upload Application </h1>
+
+{% block table %}
+    <table class="table table-compact table-bordered"{% if file_list.attrs %} {{ file_list.attrs.as_html }}{% endif %}  style="width:100%">
+        {% block table.thead %}
+            <thead>
+            <tr>
+                {% for column in file_list.columns %}
+                    {% if column.orderable %}
+                        <th {{ column.attrs.th.as_html }}>{{ column.header }}</th>
+                    {% else %}
+                        <th {{ column.attrs.th.as_html }}>{{ column.header }}</th>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            </thead>
+        {% endblock table.thead %}
+        {% block table.tbody %}
+            <tbody>
+            {% for row in file_list.page.object_list|default:file_list.rows %} {# support pagination #}
+                {% block table.tbody.row %}
+                    <tr class="{% cycle 'odd' 'even' %}">
+                        {% for column, cell in row.items %}
+                            <td {{ column.attrs.td.as_html }}>{{ cell }}</td>
+                        {% endfor %}
+                        <td>
+                                <button   type="submit" class="btn btn-primary"> Archive</button>
+                                <button   type="submit" class="btn btn-primary"> Delete</button>
+                        </td>
+                    </tr>
+                {% endblock table.tbody.row %}
+            {% empty %}
+                {% if file_list.empty_text %}
+                    {% block table.tbody.empty_text %}
+                        <tr><td colspan="{{ file_list.columns|length }}">{{ table.empty_text }}</td></tr>
+                    {% endblock table.tbody.empty_text %}
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        {% endblock table.tbody %}
+        {% block table.tfoot %}
+            <tfoot></tfoot>
+        {% endblock table.tfoot %}
+    </table>
+{% endblock table %}
+
+
+     <form action="{% url 'fileuploadapp:fileupload'  %}" method="post" class="form">
+            {% csrf_token %}
+
+            {% buttons %}
+                <button   type="submit" class="btn btn-primary">
+                    Upload New File
+                </button>
+            {% endbuttons %}
+        </form>
+</body>
+</html>
