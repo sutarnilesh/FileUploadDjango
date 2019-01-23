@@ -13,3 +13,5 @@ urlpatterns = [
     url(r'^upload/$', FileUploadEntry.as_view(), name='fileupload'),
 
 ]
+
+from django.shortcuts import reverse
