@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_HOST=localhost
+      - MYSQL_PORT=3306  # cannot change this port to other number
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_DATABASE='djangofileupload'
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD='itsasecret'
+      - MYSQL_ROOT_PASSWORD='itsasecret'
+    volumes:
+      - /var/lib/mysql
+    ports:
+      - "3306:3306"
+  web:
+    image: nileshsutar/dockerizing-python-django-app
+    build:
+        context: .
+        dockerfile: Dockerfile
+    container_name: djangoserver
+    stdin_open: true
+    tty: true
+    volumes:
+        - .:/FileUpload
+    ports:
+        - "8000:8000"
+
