@@ -1,4 +1,4 @@
-Django==2.0
+Django
 django-bootstrap3==11.0.0
 django-tables2==2.0.4
 mysql-connector-python==8.0.14
